@@ -29,7 +29,7 @@ function RouteLoading() {
   );
 }
 
-// Hardcoded for your new deployment to avoid parsing errors
+// HARDCODED FIX: This eliminates the "Couldn't parse deployment name" error
 const convex = new ConvexReactClient("https://bridge-cc438.convex.cloud");
 
 createRoot(document.getElementById("root")!).render(
