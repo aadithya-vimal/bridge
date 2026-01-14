@@ -29,13 +29,17 @@ function RouteLoading() {
   );
 }
 
-// Ensure the URL is valid and complete
-const convexUrl = import.meta.env.VITE_CONVEX_URL;
-if (!convexUrl || !convexUrl.startsWith('https://')) {
-  console.error("CRITICAL: VITE_CONVEX_URL is missing or malformed. Current value:", convexUrl);
+// FIX: Logic to handle both full URLs and short deployment names
+const rawUrl = import.meta.env.VITE_CONVEX_URL || "";
+const convexUrl = rawUrl.startsWith("http") 
+  ? rawUrl 
+  : `https://${rawUrl}.convex.cloud`;
+
+if (!convexUrl.includes(".convex.cloud") && !convexUrl.includes(".convex.site")) {
+  console.error("CONVEX URL VALIDATION FAILED:", convexUrl);
 }
 
-const convex = new ConvexReactClient(convexUrl as string);
+const convex = new ConvexReactClient(convexUrl);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -54,6 +58,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="chat" element={<GlobalChatPage />} />
                 <Route path="tickets" element={<TicketsPage />} />
                 <Route path="workspace/:workspaceId" element={<DashboardPage />} />
+                
                 <Route path="assets" element={<AssetsPage />} />
                 <Route path="admin" element={<AdminPage />} />
               </Route>
