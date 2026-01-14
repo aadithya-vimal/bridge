@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/input-otp";
 
 import { useAuth } from "@/hooks/use-auth";
-import { ArrowRight, Loader2, Mail, UserX } from "lucide-react";
+import { ArrowRight, Loader2, Mail, UserX, Chrome } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
@@ -45,6 +45,20 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       navigate(destination);
     }
   }, [authLoading, isAuthenticated, navigate, destination]);
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Explicitly redirect back to the current origin
+      await signIn("google", { redirectTo: window.location.origin + destination });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      setError("Failed to sign in with Google.");
+      setIsLoading(false);
+    }
+  };
+
   const handleEmailSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
@@ -121,12 +135,33 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                 </div>
                 <CardTitle className="text-xl">Get Started</CardTitle>
                 <CardDescription>
-                  Enter your email to log in or sign up
+                  Choose your preferred login method
                 </CardDescription>
               </CardHeader>
-              <form onSubmit={handleEmailSubmit}>
-                <CardContent>
-                  
+              <CardContent className="space-y-4">
+                {/* Google Sign In Button */}
+                <Button 
+                  onClick={handleGoogleSignIn}
+                  variant="outline"
+                  className="w-full py-6 text-base font-medium border-zinc-200 hover:bg-zinc-50"
+                  disabled={isLoading}
+                >
+                  <Chrome className="mr-2 h-5 w-5" />
+                  Continue with Google
+                </Button>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or email code
+                    </span>
+                  </div>
+                </div>
+
+                <form onSubmit={handleEmailSubmit}>
                   <div className="relative flex items-center gap-2">
                     <div className="relative flex-1">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -152,35 +187,36 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       )}
                     </Button>
                   </div>
-                  {error && (
-                    <p className="mt-2 text-sm text-red-500">{error}</p>
-                  )}
-                  
-                  <div className="mt-4">
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                      </div>
-                      <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background px-2 text-muted-foreground">
-                          Or
-                        </span>
-                      </div>
+                </form>
+
+                {error && (
+                  <p className="mt-2 text-sm text-red-500">{error}</p>
+                )}
+                
+                <div className="mt-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
                     </div>
-                    
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full mt-4"
-                      onClick={handleGuestLogin}
-                      disabled={isLoading}
-                    >
-                      <UserX className="mr-2 h-4 w-4" />
-                      Continue as Guest
-                    </Button>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        Or
+                      </span>
+                    </div>
                   </div>
-                </CardContent>
-              </form>
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full mt-4"
+                    onClick={handleGuestLogin}
+                    disabled={isLoading}
+                  >
+                    <UserX className="mr-2 h-4 w-4" />
+                    Continue as Guest
+                  </Button>
+                </div>
+              </CardContent>
             </>
           ) : (
             <>
@@ -203,7 +239,6 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                       disabled={isLoading}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && otp.length === 6 && !isLoading) {
-                          // Find the closest form and submit it
                           const form = (e.target as HTMLElement).closest("form");
                           if (form) {
                             form.requestSubmit();
