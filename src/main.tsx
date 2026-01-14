@@ -29,7 +29,7 @@ function RouteLoading() {
   );
 }
 
-// HARDCODED FIX: This eliminates the "Couldn't parse deployment name" error
+// HARDCODED: This bypasses Cloudflare variable issues and fixes the "Couldn't parse" error.
 const convex = new ConvexReactClient("https://bridge-cc438.convex.cloud");
 
 createRoot(document.getElementById("root")!).render(
@@ -49,6 +49,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="chat" element={<GlobalChatPage />} />
                 <Route path="tickets" element={<TicketsPage />} />
                 <Route path="workspace/:workspaceId" element={<DashboardPage />} />
+                
                 <Route path="assets" element={<AssetsPage />} />
                 <Route path="admin" element={<AdminPage />} />
               </Route>
