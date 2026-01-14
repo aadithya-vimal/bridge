@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useMutation, useQuery } from "convex/react";
 import { Building2, Loader2, Plus, Search } from "lucide-react";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router-dom"; // Fixed import
 import { toast } from "sonner";
 
 export default function CompanySetup() {
@@ -33,7 +33,7 @@ export default function CompanySetup() {
     try {
       await createCompany({ name });
       toast.success("Company created!");
-      window.location.reload(); // Reload to refresh auth state/layout
+      window.location.reload(); 
     } catch (error) {
       toast.error("Failed to create company");
     }
