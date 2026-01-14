@@ -8,10 +8,9 @@ import { ErrorBoundary } from "@/components/ui/error-boundary";
 import "./index.css";
 import "./types/global.d.ts";
 
-// Debug Log to verify deployment
-console.log("BRIDGE OS: Initializing with Hardcoded Convex URL v1.0.1");
+// VERSION CHECK - If you don't see v1.0.5 in the console, it's cached.
+console.log("BRIDGE OS BOOT: v1.0.5 - Deployment URL override active.");
 
-// Lazy load route components
 const Landing = lazy(() => import("./pages/Landing.tsx"));
 const AuthPage = lazy(() => import("./pages/Auth.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
@@ -32,7 +31,7 @@ function RouteLoading() {
   );
 }
 
-// HARDCODED URL - Absolutely bypasses environment variables
+// Ensure no environment variables interfere
 const convex = new ConvexReactClient("https://bridge-cc438.convex.cloud");
 
 createRoot(document.getElementById("root")!).render(
@@ -52,7 +51,6 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="chat" element={<GlobalChatPage />} />
                 <Route path="tickets" element={<TicketsPage />} />
                 <Route path="workspace/:workspaceId" element={<DashboardPage />} />
-                
                 <Route path="assets" element={<AssetsPage />} />
                 <Route path="admin" element={<AdminPage />} />
               </Route>
