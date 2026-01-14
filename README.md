@@ -30,7 +30,7 @@ Stay ahead of client needs. The system monitors project health and flags any acc
 
 ## 🚀 How to Get Started
 
-1. **Log In:** Go to [https://bridge-collaborate.pages.dev/](https://bridge-collaborate.pages.dev/) and click **"Continue with Google"** using your work email.
+1. **Log In:** Go to [https://bridge-collaborate.pages.dev/](https://bridge-os.pages.dev/) and click **"Continue with Google"** using your work email.
 2. **Request Access:** When you first log in, you will be on "Guest" status. **Please message Aadithya immediately** once you have signed in.
 3. **Enter Your Workspace:** Once your role is assigned, your specific department will appear in the sidebar, and you’ll have full access to your tools.
 
