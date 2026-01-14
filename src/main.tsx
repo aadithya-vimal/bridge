@@ -8,7 +8,7 @@ import { ErrorBoundary } from "@/components/ui/error-boundary";
 import "./index.css";
 import "./types/global.d.ts";
 
-// Lazy load route components for better code splitting
+// Lazy load route components
 const Landing = lazy(() => import("./pages/Landing.tsx"));
 const AuthPage = lazy(() => import("./pages/Auth.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
@@ -21,7 +21,6 @@ const CompaniesPage = lazy(() => import("./pages/dashboard/Companies.tsx"));
 const GlobalChatPage = lazy(() => import("./pages/dashboard/GlobalChat.tsx"));
 const TicketsPage = lazy(() => import("./pages/dashboard/Tickets.tsx"));
 
-// Simple loading fallback for route transitions
 function RouteLoading() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-950">
@@ -30,7 +29,13 @@ function RouteLoading() {
   );
 }
 
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
+// Ensure the URL is valid and complete
+const convexUrl = import.meta.env.VITE_CONVEX_URL;
+if (!convexUrl || !convexUrl.startsWith('https://')) {
+  console.error("CRITICAL: VITE_CONVEX_URL is missing or malformed. Current value:", convexUrl);
+}
+
+const convex = new ConvexReactClient(convexUrl as string);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -42,16 +47,13 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
               
-              {/* Dashboard Routes */}
               <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route index element={<DashboardPage />} />
                 <Route path="setup" element={<CompanySetup />} />
                 <Route path="companies" element={<CompaniesPage />} />
                 <Route path="chat" element={<GlobalChatPage />} />
                 <Route path="tickets" element={<TicketsPage />} />
-                {/* Dynamic Workspace Route */}
                 <Route path="workspace/:workspaceId" element={<DashboardPage />} />
-                
                 <Route path="assets" element={<AssetsPage />} />
                 <Route path="admin" element={<AdminPage />} />
               </Route>
